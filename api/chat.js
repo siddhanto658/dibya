@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         },
         ...messages
       ],
-      model: 'llama-3.3-70b-versatile',
+      model: 'llama-3.1-70b-versatile',
       temperature: 0.7,
       max_tokens: 1024,
     });
@@ -31,6 +31,6 @@ export default async function handler(req, res) {
     res.status(200).json({ response });
   } catch (error) {
     console.error('Groq API error:', error);
-    res.status(500).json({ error: 'Failed to get response from AI' });
+    res.status(500).json({ error: error.message || 'Failed to get response from AI' });
   }
 }
