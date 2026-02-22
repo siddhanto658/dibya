@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steve FX - Professional Video Editor Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Oswald:wght@500;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #0b0b0b;
+            --bg-layer: #0a0a0c; 
+            --accent: #00d2ff; 
+            --premium-violet: #2e1065;
+            --text-light: #ffffff;
+            --text-muted: #888888;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            
+            --color-pr: #00005c;
+            --color-pr-text: #ea77ff;
+            --color-ae: #00005c;
+            --color-ae-text: #9999ff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        @media (pointer: fine) { * { cursor: none; } }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            height: 600vh; 
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .motion-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -2; background: var(--bg-dark); overflow: hidden;
+        }
+
+        .blob {
+            position: absolute; border-radius: 50%; filter: blur(100px);
+            opacity: 0.35; mix-blend-mode: screen;
+            animation: moveBlob 25s infinite alternate ease-in-out;
+        }
+
+        .blob-1 {
+            width: 70vw; height: 70vw;
+            background: radial-gradient(circle, var(--premium-violet) 0%, transparent 70%);
+            top: -15%; left: -10%;
+        }
+
+        .blob-2 {
+            width: 60vw; height: 60vw;
+            background: radial-gradient(circle, #1e1b4b 0%, transparent 70%);
+            bottom: -15%; right: -10%; animation-delay: -7s;
+        }
+
+        @keyframes moveBlob {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(15vw, 10vh) scale(1.1); }
+            100% { transform: translate(-10vw, -15vh) scale(0.9); }
+        }
+
+        .timeline-playhead {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 4px;
+            background: var(--accent); z-index: 9999; transform-origin: left;
+            transform: scaleX(0); box-shadow: 0 0 15px var(--accent);
+        }
+
+        .cursor-dot {
+            position: fixed; top: 0; left: 0; width: 6px; height: 6px;
+            background: var(--accent); border-radius: 50%; pointer-events: none;
+            z-index: 100000; transform: translate(-50%, -50%); box-shadow: 0 0 10px var(--accent);
+        }
+
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%; padding: 2rem 4vw;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 100; mix-blend-mode: difference; color: white;
+            font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 600;
+        }
+
+        .sticky-container {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; z-index: 10;
+            background-image: url('https://www.transparenttextures.com/patterns/concrete-wall.png');
+            background-blend-mode: multiply;
+            background-color: rgba(0,0,0,0.7);
+        }
+
+        .massive-title {
+            position: absolute; width: 100%; display: flex; justify-content: center;
+            font-family: 'Oswald', sans-serif; font-size: clamp(6rem, 18vw, 22rem);
+            font-weight: 700; line-height: 0.8; text-transform: uppercase;
+            z-index: 1; white-space: nowrap;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .title-left { color: var(--text-light); }
+        .title-right { color: var(--accent); } 
+
+        .center-graphic {
+            position: absolute; width: 400px; height: 550px; z-index: 5;
+            overflow: hidden; 
+            mask-image: radial-gradient(circle at center, black 50%, transparent 100%);
+            -webkit-mask-image: radial-gradient(circle at center, black 50%, transparent 100%);
+        }
+
+        .center-graphic img { 
+            width: 100%; height: 100%; object-fit: cover; opacity: 1; 
+            transform: scale(1.1);
+        }
+
+        .badge {
+            position: absolute; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 6; font-family: 'Inter', sans-serif; font-weight: 800;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            will-change: transform, opacity;
+        }
+        
+        .badge-ae { 
+            width: 100px; height: 100px; top: 20%; left: 18%; 
+            background: var(--color-ae); color: var(--color-ae-text); 
+            border: 3px solid var(--color-ae-text); font-size: 2.2rem;
+            box-shadow: 0 0 20px rgba(153, 153, 255, 0.4), 0 10px 30px rgba(0,0,0,0.6);
+        }
+        .badge-pr { 
+            width: 100px; height: 100px; top: 68%; left: 32%; 
+            background: var(--color-pr); color: var(--color-pr-text); 
+            border: 3px solid var(--color-pr-text); font-size: 2.2rem;
+            box-shadow: 0 0 20px rgba(234, 119, 255, 0.4), 0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        .badge-dv { 
+            width: 110px; height: 110px; top: 38%; right: 18%; 
+            background: #000; border: 2px solid rgba(255,255,255,0.2);
+            padding: 8px;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.2), 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .dv-logo-wheel {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/DaVinci_Resolve_17_logo.svg/2048px-DaVinci_Resolve_17_logo.svg.png'); 
+            background-size: cover;
+            background-position: center;
+        }
+
+        .content-layer {
+            position: absolute; top: 100vh; left: 0; width: 100%;
+            z-index: 15; background: transparent; 
+        }
+
+        .inner-content {
+            background-color: var(--bg-layer); padding-bottom: 5rem;
+            box-shadow: 0 -20px 50px rgba(0,0,0,0.5);
+        }
+
+        .intro-section {
+            max-width: 1400px; margin: 0 auto; padding: 15vh 5vw 8vh 5vw;
+            display: grid; grid-template-columns: 1fr 1.5fr; gap: 5rem;
+            align-items: center;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .profile-img-container {
+            width: 100%; aspect-ratio: 4/5; border-radius: 8px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            position: relative;
+        }
+        .profile-img-container::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5); pointer-events: none;
+        }
+        .profile-img {
+            width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.1);
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), filter 0.6s ease;
+        }
+        .profile-img-container:hover .profile-img {
+            transform: scale(1.05); filter: grayscale(80%) contrast(1.15);
+        }
+
+        .intro-details { display: flex; flex-direction: column; gap: 3rem; }
+        .intro-text h2 { font-family: 'Oswald', sans-serif; font-size: clamp(2.5rem, 5vw, 4.5rem); text-transform: uppercase; line-height: 1.1; margin-bottom: 1.5rem;}
+        .intro-text h2 span { color: var(--accent); }
+        .intro-text p { font-size: 1.1rem; color: var(--text-muted); line-height: 1.8; }
+
+        .toolkit-list { list-style: none; }
+        .toolkit-list h3 { font-family: 'Inter', sans-serif; font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.5rem; }
+        .toolkit-list li { display: flex; align-items: center; gap: 15px; margin-bottom: 1rem; font-size: 1.1rem; font-weight: 600; }
+        .toolkit-list li::before { content: ''; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
+
+        .work-category { padding: 6rem 0; border-bottom: 1px solid var(--border-subtle); }
+        .category-header { padding: 0 5vw; margin-bottom: 2rem; }
+        .category-header h3 { font-family: 'Oswald', sans-serif; font-size: 2.5rem; text-transform: uppercase; }
+
+        .coverflow-wrapper {
+            position: relative; width: 100%; height: 550px;
+            display: flex; align-items: center; justify-content: center;
+            perspective: 1500px; overflow: hidden;
+        }
+
+        .coverflow-item {
+            position: absolute; width: 320px; height: 420px;
+            border-radius: 12px; background: #111; overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+        }
+
+        .coverflow-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; transition: 0.3s;}
+        .coverflow-item.active { border-color: var(--accent); box-shadow: 0 0 50px rgba(0, 210, 255, 0.2); }
+        .coverflow-item.active img { opacity: 1; }
+
+        .contact-section { text-align: center; padding: 10rem 5vw; }
+        .contact-btn {
+            display: inline-block; padding: 1.5rem 3rem; border: 1px solid var(--accent);
+            color: var(--accent); text-decoration: none; text-transform: uppercase;
+            letter-spacing: 2px; transition: 0.3s; font-weight: 600;
+        }
+        .contact-btn:hover { background: var(--accent); color: var(--bg-dark); }
+
+        .lightbox {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(3, 3, 3, 0.95); backdrop-filter: blur(10px);
+            z-index: 99999; display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        .lightbox.active { opacity: 1; pointer-events: auto; }
+        .lightbox-content { width: 80%; max-width: 1200px; aspect-ratio: 16/9; }
+        .lightbox-content iframe { width: 100%; height: 100%; border-radius: 8px; border: none; }
+        .lightbox-close { position: absolute; top: 2rem; right: 3rem; color: white; font-size: 3rem; cursor: pointer; }
+
+        @media (max-width: 900px) {
+            .intro-section { grid-template-columns: 1fr; gap: 3rem; }
+            .profile-img-container { max-width: 450px; margin: 0 auto; }
+            .coverflow-item { width: 260px; height: 340px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="motion-canvas">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="timeline-playhead" id="playhead"></div>
+    <div class="cursor-dot" id="cursor-dot"></div>
+
+    <nav>
+        <div>STEVE.FX</div>
+        <div class="nav-links">
+            <span onclick="document.getElementById('work-start').scrollIntoView({behavior: 'smooth'})" style="cursor: pointer; margin-right: 20px;">WORK</span>
+        </div>
+    </nav>
+
+    <div class="sticky-container">
+        <div class="massive-title">
+            <div class="title-left" id="text-left">STEVE&nbsp;</div>
+            <div class="title-right" id="text-right">FX</div>
+        </div>
+        
+        <div class="badge badge-ae" id="badge-ae">AE</div>
+        <div class="badge badge-pr" id="badge-pr">PR</div>
+        
+        <div class="badge badge-dv" id="badge-dv">
+            <div class="dv-logo-wheel"></div>
+        </div>
+
+        <div class="center-graphic" id="center-graphic">
+            <img src="profile.jpg" alt="Steve FX Portrait">
+        </div>
+    </div>
+
+    <div class="content-layer" id="content-layer">
+        <div class="inner-content">
+            
+            <section class="intro-section" id="work-start">
+                <div class="profile-img-container">
+                    <img src="profile.jpg" alt="Steve FX" class="profile-img">
+                </div>
+
+                <div class="intro-details">
+                    <div class="intro-text">
+                        <h2>Crafting <span>Narrative</span><br>Through the Cut.</h2>
+                        <p>Post-production specialist focused on rhythm and visual storytelling. Utilizing industry-standard tools to deliver high-impact commercial and cinematic sequences.</p>
+                    </div>
+                    
+                    <div class="toolkit-list">
+                        <h3>Technical Arsenal</h3>
+                        <ul>
+                            <li>Adobe Premiere Pro</li>
+                            <li>Adobe After Effects</li>
+                            <li>DaVinci Resolve</li>
+                            <li>Sound Design & Mixing</li>
+                            <li>Color Grading</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="work-category">
+                <div class="category-header"><h3><span>01 //</span> Top Showreel</h3></div>
+                <div class="coverflow-wrapper" id="coverflow-wrapper">
+                    <div class="coverflow-item" data-video="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                        <img src="https://images.unsplash.com/photo-1521133573892-e44906baee46?q=80&w=800&auto=format&fit=crop">
+                    </div>
+                    <div class="coverflow-item" data-video="https://player.vimeo.com/video/76979871">
+                        <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=800&auto=format&fit=crop">
+                    </div>
+                    <div class="coverflow-item" data-video="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                        <img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=800&auto=format&fit=crop">
+                    </div>
+                </div>
+            </section>
+
+            <section class="contact-section">
+                <h2>Ready to Start?</h2>
+                <a href="mailto:hello@stevefx.dev" class="contact-btn">Get In Touch</a>
+            </section>
+        </div>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-close" id="lb-close">&times;</div>
+        <div class="lightbox-content"><iframe id="lb-video" src="" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
+    </div>
+
+    <script>
+        const cursor = document.getElementById('cursor-dot');
+        window.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        const textLeft = document.getElementById('text-left'), textRight = document.getElementById('text-right');
+        const centerGraphic = document.getElementById('center-graphic'), playhead = document.getElementById('playhead');
+        const contentLayer = document.getElementById('content-layer');
+        const badges = [document.getElementById('badge-ae'), document.getElementById('badge-pr'), document.getElementById('badge-dv')];
+
+        let currentScroll = 0, targetScroll = 0;
+        window.addEventListener('scroll', () => targetScroll = window.scrollY);
+
+        function render() {
+            currentScroll += (targetScroll - currentScroll) * 0.07;
+            let totalHeight = document.body.scrollHeight - window.innerHeight;
+            playhead.style.transform = `scaleX(${currentScroll / totalHeight})`;
+
+            const phase = window.innerHeight * 1.5; 
+            let progress = Math.min(currentScroll / phase, 1);
+            let exit = Math.min(progress * 2.5, 1);
+
+            textLeft.style.transform = `translateX(${-exit * 150}vw)`; textLeft.style.opacity = 1 - exit;
+            textRight.style.transform = `translateX(${exit * 150}vw)`; textRight.style.opacity = 1 - exit;
+            centerGraphic.style.transform = `scale(${Math.max(0.8, 1 - exit * 0.2)})`;
+            centerGraphic.style.opacity = 1 - exit;
+            
+            badges.forEach((b, i) => {
+                b.style.opacity = 1 - exit;
+                b.style.transform = `translate(${(i-1)*exit*350}%, ${exit*250}%) scale(${1-exit})`;
+            });
+
+            contentLayer.style.transform = `translateY(${Math.max(0, 100 - (progress * 100))}vh)`;
+            requestAnimationFrame(render);
+        }
+        render();
+
+        const cvItems = document.querySelectorAll('.coverflow-item'), cvWrapper = document.getElementById('coverflow-wrapper');
+        let cvIndex = 1, throttled = false;
+
+        function updateCV() {
+            cvItems.forEach((item, i) => {
+                const off = i - cvIndex, absOff = Math.abs(off);
+                item.style.transform = `translateX(${off * 110}%) translateZ(${absOff * -200}px) rotateY(${off === 0 ? 0 : (off > 0 ? -40 : 40)}deg) scale(${off === 0 ? 1 : 0.8})`;
+                item.style.zIndex = 100 - absOff; item.style.opacity = off === 0 ? 1 : 0.4;
+                item.classList.toggle('active', off === 0);
+            });
+        }
+        updateCV();
+
+        cvWrapper.addEventListener('wheel', e => {
+            const isAtLast = cvIndex === cvItems.length - 1 && e.deltaY > 0;
+            const isAtFirst = cvIndex === 0 && e.deltaY < 0;
+            if (!isAtLast && !isAtFirst) {
+                e.preventDefault(); 
+                if (throttled) return;
+                if (e.deltaY > 0) cvIndex++; else cvIndex--;
+                updateCV(); throttled = true; setTimeout(() => throttled = false, 400);
+            }
+        }, { passive: false });
+
+        const lb = document.getElementById('lightbox'), lbv = document.getElementById('lb-video');
+        document.querySelectorAll('[data-video]').forEach(item => {
+            item.addEventListener('click', () => {
+                const idx = Array.from(cvItems).indexOf(item);
+                if (idx !== -1 && idx !== cvIndex) { cvIndex = idx; updateCV(); } 
+                else { lbv.src = item.dataset.video + "?autoplay=1"; lb.classList.add('active'); }
+            });
+        });
+        document.getElementById('lb-close').onclick = () => { lb.classList.remove('active'); lbv.src = ""; };
+    </script>
+</body>
+</html>
