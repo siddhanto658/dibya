@@ -1,0 +1,23 @@
+{
+  "name": "dibya",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/siddhanto658/dibya.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/siddhanto658/dibya/issues"
+  },
+  "homepage": "https://github.com/siddhanto658/dibya#readme",
+  "dependencies": {
+    "groq-sdk": "^0.37.0"
+  }
+}
